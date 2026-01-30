@@ -44,10 +44,6 @@ const _props = defineProps({
     type: Number,
     default: undefined,
   },
-  modelValue: {
-    type: String,
-    default: null,
-  },
 });
 
 const props = useDefaults(_props, 'VCodeEditor');

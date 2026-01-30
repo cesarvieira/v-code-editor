@@ -1,0 +1,20 @@
+.v-code-editor__input
+  width: 100%;
+
+  .v-field__input input
+    display: none;
+
+  .cm-editor, .cm-content, .cm-gutter
+    height: 100%;
+
+  .cm-focused
+    outline: none;
+
+  .dirty .cm-gutters
+    display: none;
+
+  .v-label.v-field-label:not(.v-field-label--floating)
+    transform: none !important;
+
+  .cm-editor:not(.cm-focused) .cm-activeLine
+    background-color: transparent;

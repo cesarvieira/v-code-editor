@@ -1,17 +1,61 @@
 .v-code-editor__input
   width: 100%;
 
-  .v-field__input input
-    display: none;
+  .cm-scroller
+    scrollbar-color: #949393 transparent;
+
+  .v-theme--dark
+    .cm-scroller
+      scrollbar-color: #a8a8a8 transparent;
+
+  .v-field__field
+    border-radius: inherit;
+    display: flex;
+    align-items: stretch;
+
+    >div
+      border-radius: inherit;
+      min-height: 100%;
+
+    textarea
+      flex: 1;
+      width: 0;
+      padding-inline: 0;
+
+  .cm-editor, .cm-scroller
+    border-radius: inherit;
+
+    ::-webkit-scrollbar
+      width: 12px; /* width of the vertical scrollbar */
+      height: 12px; /* height of the horizontal scrollbar */
+
+    ::-webkit-scrollbar-track
+      background: #F5F5F5;
+      border-radius: 10px;
 
   .cm-editor, .cm-content, .cm-gutter
     height: 100%;
+    color: inherit;
+
+  .cm-content, .cm-gutters
+    letter-spacing: 0.009375em;
+    opacity: var(--v-high-emphasis-opacity);
+    min-width: 0;
+    min-height: calc(max(var(--v-input-control-height, 56px), 1.5rem + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom)) * 2);
+    padding-bottom: var(--v-field-input-padding-bottom);
+
+  .cm-content
+    padding-top: var(--v-field-input-padding-top);
 
   .cm-focused
     outline: none;
+    box-shadow: none;
+
+  .cm-gutters
+    display: none;
 
   .dirty .cm-gutters
-    display: none;
+    display: flex;
 
   .v-label.v-field-label:not(.v-field-label--floating)
     transform: none !important;

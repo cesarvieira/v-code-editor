@@ -27,6 +27,8 @@ import { filterInputAttrs } from 'vuetify/lib/util/helpers.mjs';
 import { makeVInputProps } from 'vuetify/lib/components/VInput/VInput.mjs';
 import { makeVFieldProps } from 'vuetify/lib/components/VField/VField.mjs';
 import { makeDensityProps } from 'vuetify/lib/composables/density.mjs';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { useTheme } from 'vuetify';
 
 const _props = defineProps({
   ...makeVTextareaProps(),
@@ -40,16 +42,12 @@ const _props = defineProps({
     type: String as PropType<'css' | 'html' | 'javascript' | LanguageSupport>,
     default: 'html',
   },
-  minHeight: {
-    type: Number,
-    default: undefined,
-  },
 });
 
 const props = useDefaults(_props, 'VCodeEditor');
 const attrs = useAttrs();
-
 const model = useModel(props, 'modelValue');
+const vTheme = useTheme();
 
 const isFocused = ref(false);
 const editorContainer = ref<HTMLElement>();
@@ -58,20 +56,6 @@ const editor = ref<EditorView | null>(null);
 const fieldProps = computed(() => VField.filterProps(props));
 const inputProps = computed(() => VInput.filterProps(props));
 const [rootAttrs, inputAttrs] = filterInputAttrs(attrs);
-const minHeightLocal = computed(() => {
-  if (props.minHeight) {
-    return `${props.minHeight}px`;
-  }
-
-  switch (props.density) {
-    case 'compact':
-      return undefined;
-    case 'comfortable':
-      return '100px';
-    default:
-      return '150px';
-  }
-});
 
 const computedModelValue = computed({
   get(): string {
@@ -97,6 +81,7 @@ const hasValue = ref((props.modelValue?.length || 0) > 0);
 
 const readOnlyCompartment = new Compartment();
 const editableCompartment = new Compartment();
+const themeCompartment = new Compartment();
 
 onMounted(() => {
   let extensionMode: LanguageSupport;
@@ -136,6 +121,7 @@ onMounted(() => {
         keymap.of([indentWithTab]),
         readOnlyCompartment.of(EditorState.readOnly.of(props.readonly ?? false)),
         editableCompartment.of(EditorView.editable.of(props.disabled ? false : true)),
+        themeCompartment.of(vTheme.global.name.value === 'dark' ? oneDark : []),
       ],
     }),
     parent: editorContainer.value,
@@ -153,6 +139,13 @@ watch(() => props.disabled, (disabled) => {
   if (!editor.value) return;
   editor.value.dispatch({
     effects: editableCompartment.reconfigure(EditorView.editable.of(disabled ? false : true)),
+  });
+});
+
+watch(() => vTheme.global.name.value, (theme) => {
+  if (!editor.value) return;
+  editor.value.dispatch({
+    effects: themeCompartment.reconfigure(theme === 'dark' ? oneDark : []),
   });
 });
 
@@ -182,18 +175,21 @@ onBeforeUnmount(() => {
           focused: isFocused || inputProps.focused,
           density: props.density,
         }"
-        :style="{ minHeight: minHeightLocal }"
         @click:clear="!isReadonly.value ? (model = '') : undefined"
       >
         <template #default>
           <div
-            :id="id.value"
             ref="editorContainer"
-            class="h-100 w-100"
+            class="h-0 w-100"
             :class="{
-              dirty: !(isFocused || isDirty.value || inputProps.focused),
+              dirty: isDirty.value || isFocused || hasValue,
             }"
           ></div>
+          <textarea
+            :id="id.value"
+            class="v-field__input"
+            :rows="props.rows ?? 5"
+          ></textarea>
         </template>
         <template v-for="(_, slotName) in $slots as Slots" #[slotName]="slotProps">
           <slot v-if="slotName !== 'default'" :name="slotName" v-bind="slotProps"></slot>

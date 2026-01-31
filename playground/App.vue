@@ -29,7 +29,33 @@ const modelVariant = ref('// variant: "outlined" | "filled" | "plain" | "underli
           <VCardTitle>1. Basic</VCardTitle>
           <VCardText>
             <p class="text-caption mb-4">Simple usage with v-model.</p>
-            <VCodeEditor v-model="model" />
+            <VRow>
+              <VCol cols="12" md="6">
+                <VCodeEditor
+                  v-model="model"
+                  label="CSS Personalizado"
+                  mode="css"
+                  density="default"
+                  variant="outlined"
+                  color="primary"
+                  hide-details="auto"
+                  rows="10"
+                  rounded="xl"
+                />
+              </VCol>
+              <VCol cols="12" md="6">
+                <VTextarea
+                  v-model="model"
+                  label="CSS Personalizado"
+                  density="default"
+                  variant="outlined"
+                  color="primary"
+                  hide-details="auto"
+                  rows="10"
+                  rounded="xl"
+                />
+              </VCol>
+            </VRow>
           </VCardText>
         </VCard>
       </VCol>

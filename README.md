@@ -138,16 +138,6 @@ Removes elevation/shadow from the field.
 </template>
 ```
 
-### Min height
-
-Sets minimum height in pixels (overrides density-based default).
-
-```vue
-<template>
-  <VCodeEditor v-model="code" :min-height="200" />
-</template>
-```
-
 ### Label and hint
 
 ```vue
@@ -169,7 +159,6 @@ Sets minimum height in pixels (overrides density-based default).
 | ----------- | -------------------------------------------------------------------- | ---------- | ------------------------------------------------ |
 | `modelValue`| `string`                                                             | `null`     | Editor content (v-model).                        |
 | `mode`      | `'html' \| 'css' \| 'javascript' \| LanguageSupport`                 | `'html'`   | Syntax mode.                                     |
-| `minHeight` | `number`                                                             | —          | Min height in px; if unset, derived from density.|
 | `clearable` | `boolean`                                                            | —          | Shows clear icon when there is content.          |
 | `disabled`  | `boolean`                                                            | —          | Disables editing.                                |
 | `readonly`  | `boolean`                                                            | —          | Content visible but not editable.                |

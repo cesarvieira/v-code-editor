@@ -13,6 +13,9 @@ import '@mdi/font/css/materialdesignicons.css';
 
 const app = createApp(App);
 app.use(createVuetify({
+  // theme: {
+  //   defaultTheme: 'dark',
+  // },
   components: {
     ...components,
     VCodeEditor,

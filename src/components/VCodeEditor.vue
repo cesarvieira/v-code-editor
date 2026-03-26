@@ -11,6 +11,7 @@ import {
   ref,
   useAttrs,
   useModel,
+  useSlots,
   watch,
 } from 'vue';
 import { basicSetup } from 'codemirror';
@@ -21,12 +22,12 @@ import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
 import type { LanguageSupport } from '@codemirror/language';
-import { makeVTextareaProps } from 'vuetify/lib/components/VTextarea/VTextarea.mjs';
+import { makeVTextareaProps } from 'vuetify/lib/components/VTextarea/VTextarea.js';
 import { useDefaults } from 'vuetify';
-import { filterInputAttrs } from 'vuetify/lib/util/helpers.mjs';
-import { makeVInputProps } from 'vuetify/lib/components/VInput/VInput.mjs';
-import { makeVFieldProps } from 'vuetify/lib/components/VField/VField.mjs';
-import { makeDensityProps } from 'vuetify/lib/composables/density.mjs';
+import { filterInputAttrs } from 'vuetify/lib/util/helpers.js';
+import { makeVInputProps } from 'vuetify/lib/components/VInput/VInput.js';
+import { makeVFieldProps } from 'vuetify/lib/components/VField/VField.js';
+import { makeDensityProps } from 'vuetify/lib/composables/density.js';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { useTheme } from 'vuetify';
 
@@ -56,6 +57,8 @@ const editor = ref<EditorView | null>(null);
 const fieldProps = computed(() => VField.filterProps(props));
 const inputProps = computed(() => VInput.filterProps(props));
 const [rootAttrs, inputAttrs] = filterInputAttrs(attrs);
+const slots = useSlots() as Slots;
+const slotNames = computed((): string[] => Object.keys(slots));
 
 const computedModelValue = computed({
   get(): string {
@@ -191,7 +194,11 @@ onBeforeUnmount(() => {
             :rows="props.rows ?? 5"
           ></textarea>
         </template>
-        <template v-for="(_, slotName) in $slots as Slots" #[slotName]="slotProps">
+        <template
+          v-for="slotName in slotNames"
+          :key="slotName"
+          #[slotName]="slotProps"
+        >
           <slot v-if="slotName !== 'default'" :name="slotName" v-bind="slotProps"></slot>
         </template>
       </VField>
